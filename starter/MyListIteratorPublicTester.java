@@ -167,6 +167,7 @@ public class MyListIteratorPublicTester {
                 listLen1Iter.idx);
         assertTrue("Able to remove node", listLen1Iter.canRemoveOrSet);
         assertFalse("Direction is not forward", listLen1Iter.forward);
+        
         try {
             listLen1Iter.previous(); // Should throw NoSuchElementException
             fail();
