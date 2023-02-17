@@ -1,9 +1,10 @@
 /**
  * @author Dung (Jonny) Le
+ * Email: dal018@ucsd.edu
+ * PID: A16873166
  * Date: 2/17/2023
- * This file contains my implementation from MyLinkedList and Iterator 
- * This PA was done in small collaboration with Stevie Komon for fixing algorithms
- * 
+ * References: Week 3 Course Lecture Powerpoint, LLIterator.java
+ * This file contains my implementation from MyLinkedList and Iterator.  
  */
 
 import java.util.AbstractList;
@@ -92,34 +93,42 @@ public class MyLinkedList<E> extends AbstractList<E> {
         this.tail = new Node(null);
         this.head.setNext(tail);
         this.tail.setPrev(head);
-        this.size = 0;
+        size = 0;
     }
 
     @Override
     public int size() {
         // need to implement the size method
-        return this.size; // TODO
+        return size; // TODO
     }
 
     @Override
     public E get(int index) {
-        if(index < 0 || index > this.size){
+        if(index < 0 || index > size){
             throw new IndexOutOfBoundsException();
         }
         Node returnNode = getNth(index);
         return returnNode.getElement();
     }
 
-    /*
-     * Append with index (middle of list)
-     * Throw index out of bounds exception if index is less than 0 
-     * OR if index greater than this.size + 1 (since if index is only larger than this.size + 1, then append to linked list)
+    /**
+     * Append with specified index (middle of list)
+     * Throw IndexOutOfBoundsException if index is invalid
+     * Throw NullPointerException if data is null
+     * Increase size at the end
+     * 
+     * @param index of type int
+     * @param data of generic type E
+     * 
+     * Instance variables:
+     * addedNode - new node with data parameter as its data
+     * curNode - current node at index parameter
      */
     @Override
     public void add(int index, E data) {
         /* Add your implementation here */
         // TODO
-        if(index < 0 || index > this.size){
+        if(index < 0 || index > size){
             throw new IndexOutOfBoundsException();
         }
 
@@ -129,7 +138,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 
         Node addedNode = new Node(data);
 
-        //Test for edge cases: add at beginning
+        //Add at beginning
         if(index == 0){
             Node curNode = getNth(0);
 
@@ -143,7 +152,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
             //Add node to an empty list
             //Must set previous to head and next to tail
             //Set next and previous as node
-            if(this.size == 0){
+            if(size == 0){
                 addedNode.setPrev(head);
                 head.setNext(addedNode);
 
@@ -162,40 +171,62 @@ public class MyLinkedList<E> extends AbstractList<E> {
 
                 curNode.setPrev(addedNode);
             }
-        }
-        
-        //Add size at end
-        this.size++;
+        }    
+        size++;
     }
 
-    /*
+    /**
      * Append at end of linked list
-     * Throw null pointer exception only if data is null
+     * Throw NullPointerException if data is null
+     * Increases size
+     * 
+     * @param data of type E to be appended to linked list
+     * 
+     * Instance variables:
+     * addedNode - new node with data parameter as its data
+     * 
+     * @return true
      */
     public boolean add(E data) {
         if (data == null){
             throw new NullPointerException();
-        } else{
-            Node addedNode = new Node(data);
-            //Set next of the node before tail dummy as added node
-            tail.getPrev().setNext(addedNode);
-
-            //Set previous of added node as node before tail dummy
-            //Set next of added node as tail
-            addedNode.setPrev(tail.getPrev());
-            addedNode.setNext(tail);
-
-            //Set previous of tail as added node
-            tail.setPrev(addedNode);
-
-            size++;
         }
+
+        Node addedNode = new Node(data);
+
+        //Set next of the node before tail dummy as added node
+        tail.getPrev().setNext(addedNode);
+
+        //Set previous of added node as node before tail dummy
+        //Set next of added node as tail
+        addedNode.setPrev(tail.getPrev());
+        addedNode.setNext(tail);
+
+        //Set previous of tail as added node
+        tail.setPrev(addedNode);
+
+        size++;
+        
         return true; 
     }
 
+    /**
+     * Sets element at specified index with provided data
+     * Throws IndexOutOfBoundsException if index is invalid
+     * Throws NullPointerException if data is null
+     * 
+     * @param index of type int
+     * @param data of generic type E
+     * 
+     * Instance variables:
+     * curNode - node and data at specified index
+     * returnElem - data of curNode before it is replaced
+     * 
+     * @return data of generic type E of node at specified index prior to set method
+     */
     public E set(int index, E data) {
         
-        if(index < 0 || index > this.size){
+        if(index < 0 || index > size){
             throw new IndexOutOfBoundsException();
         }
 
@@ -211,14 +242,22 @@ public class MyLinkedList<E> extends AbstractList<E> {
         return returnElem; 
     }
 
-    /*
+    /**
      * Remove function unlinks node at index from linked list
+     * Throws IndexOutOfBoundsException if index is invalid or linked list is empty
      * Link node before and after current node with each other, hence removing current node
      * Reduce size
-     * Return the element removed
+     * 
+     * @param index of type int
+     * 
+     * Instance variables:
+     * curNode - current node at position specified by parameter
+     * returnElem - data of curNode
+     * 
+     * @return data of generic type E of removed element
      */
     public E remove(int index) {
-        if(index < 0 || index > this.size || this.size == 0){
+        if(index < 0 || index > size || isEmpty()){
             throw new IndexOutOfBoundsException();
         }
 
@@ -237,25 +276,40 @@ public class MyLinkedList<E> extends AbstractList<E> {
     /*
      * Clear linked list
      * Set next of head to tail
-     * Set previouis of tail to head
+     * Set previous of tail to head
      * Change size to 0
      */
     public void clear() {
         /* Add your implementation here */
         this.head.setNext(tail);
         this.tail.setPrev(head);
-        this.size = 0;
+        size = 0;
     }
 
-
+    /**
+     * This method decides whether if linked list is empty
+     * 
+     * @return true if size is 0, false if otherwise
+     */
     public boolean isEmpty() {
-        if(this.size == 0)
-            return true;  
-        return false;
+        return size == 0;
     }
 
+    /**
+     * This method gets Node at specified index
+     * Throws IndexOutOfBoundsException if index is out of bounds or linked list is empty
+     * Starts at beginning of list idx = 0 until idx = index 
+     * 
+     * @param index of type int
+     * 
+     * Instance variables:
+     * returnNode - set at head (sentinel) node's next, or first element
+     * idx - index that is used to compare to index parameter 
+     * 
+     * @return Node that is returned at the specified index
+     */
     protected Node getNth(int index) {
-        if(index < 0 || index > this.size || this.size == 0){
+        if(index < 0 || index > size || isEmpty()){
             throw new IndexOutOfBoundsException();
         }
 
@@ -263,6 +317,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
         //Set node that needs to be returned to first node
         Node returnNode = head.getNext();
         
+        //While loop runs as long as idx != index
         while(idx != index){
             returnNode = returnNode.getNext();
             idx++;
@@ -271,13 +326,22 @@ public class MyLinkedList<E> extends AbstractList<E> {
         return returnNode;
     }
 
+    /**
+     * Creates a separate Iterator that traverses a linked list
+     * Iterator can also remove, add, and modify a node and its contents
+     * Implements ListIterator, imported from libraries 
+     */
     protected class MyListIterator implements ListIterator<E>
     {
+        /* Instance variables */
         int idx;
         Node left, right;
         boolean forward;
         boolean canRemoveOrSet;
 
+        /*
+         * Constructor
+         */
         public MyListIterator() {
             left = head;
             right = head.getNext();
@@ -286,37 +350,63 @@ public class MyLinkedList<E> extends AbstractList<E> {
             canRemoveOrSet = false;
         }
 
+        /**
+         * This method returns true if next() method is possible. 
+         * Possible only if index is less than size of linked list
+         * 
+         * @return: if index is less than size of linked list, return true, false if not.
+         */
         public boolean hasNext()
         {
             return this.idx < MyLinkedList.size;
         }
 
+        /**
+         * This method iterates the iterator one index forward
+         * If hasNext() is false, throws a NoSuchElementException
+         * 
+         * Variables: 
+         * returnElem - Stores necessary data of a generic type E to return
+         * 
+         * @return data of next element in the list
+         */
         public E next()
         {
             if(!hasNext()){
                 throw new NoSuchElementException();
             }
 
-            if(size == 0){
-                return null;
-            }
-
-            E returnElem = right.data;
+            E returnElem = right.data;                  //Set returned element as the current right pointer
 
             this.left = left.next;
             this.right = right.next;
             this.idx++;
             this.forward = true;                        //Make sure forward becomes true
-            this.canRemoveOrSet = true;
+            this.canRemoveOrSet = true;                 //canRemoveOrSet should also become true
 
             return returnElem;
         }
 
+        /**
+         * This method returns whether previous can be called or not
+         * If previous of left pointer is null, then it is not possible
+         * 
+         * @return whether previous of left is null
+         */
         public boolean hasPrevious()
         {
             return this.left.getPrev() != null;
         }
 
+        /**
+         * This method iterates the iterator one index backward
+         * If data of left is null (left is head), throw NoSuchElementException
+         * 
+         * Instance variables: 
+         * returnElem - Stores data of a generic type E to return
+         * 
+         * @return data of previous element in the list
+         */
         public E previous(){
             
             if(left.data == null){
@@ -334,14 +424,21 @@ public class MyLinkedList<E> extends AbstractList<E> {
             return returnElem;
         }
 
+        /**
+         * Returns the next index if next() is called
+         * 
+         * @return index 
+         */
         public int nextIndex()
         {
-            if(idx < size){
-                return idx;
-            }
-            return size;
+            return idx;
         }
 
+        /**
+         * Returns the previous index if previous() is called
+         * 
+         * @return index if index if index is not 0, -1 if it is
+         */
         public int previousIndex()
         {
             if(idx == 0){
@@ -350,6 +447,18 @@ public class MyLinkedList<E> extends AbstractList<E> {
             return idx - 1;
         }
 
+        /**
+         * Adds element to linked list
+         * Adds element right before index of return value if next() is called
+         * Adds element right after index of return value previous() is called
+         * Sets canRemoveOrSet to false, as add or remove cannot be called twice in a row
+         * Throws NullPointerException if element is null
+         *
+         * @param element of generic type E. 
+         * 
+         * Instance variables:
+         * addedNode - a node with parameter as data, used to add to linked list
+         */
         public void add(E element)
         {
             //Throws NullPointerException if element is null
@@ -380,6 +489,15 @@ public class MyLinkedList<E> extends AbstractList<E> {
             this.idx++;
         }
 
+        /**
+         * Sets element of linked list 
+         * Throws NullPointerException if element is null
+         * Throws IllegalStateException is canRemoveOrSet is false
+         * Replaces element that would be returned if next() or previous is called
+         * Sets canRemoveOrSet to false
+         * 
+         * @param element of generic type E
+         */
         public void set(E element)
         {
             if(element == null){
@@ -399,19 +517,30 @@ public class MyLinkedList<E> extends AbstractList<E> {
             this.canRemoveOrSet = false;
         }
 
+        /**
+         * Removes element of a linked list 
+         * Throws IllegalStateException is canRemoveOrSet is false
+         * Removes element that would be returned if next() or previous is called
+         * If forward is true, remove left pointer element
+         * If forward is false, remove right pointer element
+         * Sets canRemoveOrSet to false
+         */
         public void remove()
         {
             if(!this.canRemoveOrSet){
                 throw new IllegalStateException();
             }
 
+            //Remove left
             if(forward){
                 left.data = null;
                 left = left.prev;
                 right.setPrev(left);
                 left.setNext(right);
                 this.idx--;
-            } else{
+            } 
+            //Remove right
+            else{
                 right.data = null;
                 right = right.next;
                 right.setPrev(left);
