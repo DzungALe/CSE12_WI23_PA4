@@ -1,9 +1,15 @@
 // DO NOT CHANGE THE METHOD NAMES
 
 import static org.junit.Assert.*;
+
+import java.util.NoSuchElementException;
+
 import org.junit.*;
 
 public class MyListIteratorCustomTester {
+
+    private MyLinkedList testList;
+    private MyLinkedList.MyListIterator testListIter;
 
     /**
      * This sets up the test fixture. JUnit invokes this method before
@@ -12,49 +18,68 @@ public class MyListIteratorCustomTester {
      */
     @Before
     public void setUp() throws Exception {
+        testList = new MyLinkedList();
+        testList.add("Alpha");
+        testList.add("Beta");
+        testList.add("Charlie");
+        testListIter = testList.new MyListIterator();
 
     }
 
     /**
      * Aims to test the next() method when iterator is at end of the list 
      */
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void testNextEnd() {
-
+        testListIter.left = testList.getNth(testList.size - 1);
+        testListIter.right = testList.getNth(testList.size);
+        testListIter.idx = 3;
+        testListIter.next();
     }
 
     /**
      * Aims to test the previous() method when iterator is at the start of the 
      * list 
      */
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void testPreviousStart() {
-        
+        testListIter.left = testList.head;
+        testListIter.right = testList.head.getNext();
+        testListIter.idx = 0;
+        testListIter.previous();
     }
 
     /**
      * Aims to test the add(E e) method when an invalid element is added
      */
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void testAddInvalid() {
-
+        testListIter.left = testList.head;
+        testListIter.right = testList.head.getNext();
+        testListIter.next();
+        testListIter.add(null);
     }
 
     /**
      * Aims to test the set(E e) method when canRemoveOrSet is false
      */
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testCantSet() {
-
+        testListIter.left = testList.head;
+        testListIter.right = testList.head.getNext();
+        testListIter.set("Delta");
     }
 
 
     /**
      * Aims to test the set(E e) method when an invalid element is set
      */
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testSetInvalid() {
-
+        testListIter.left = testList.head;
+        testListIter.right = testList.head.getNext();
+        testListIter.next();
+        testListIter.set(null);
     }
 
     /**
@@ -62,7 +87,9 @@ public class MyListIteratorCustomTester {
      */
     @Test
     public void testCantRemove() {
-
+        testListIter.left = testList.head;
+        testListIter.right = testList.head.getNext();
+        testListIter.remove();
     }
 
     /**
@@ -70,7 +97,9 @@ public class MyListIteratorCustomTester {
      */
     @Test
     public void testHasNextEnd() {
-
+        testListIter.left = testList.getNth(testList.size - 1);
+        testListIter.right = testList.getNth(testList.size);
+        assertEquals(false, testListIter.hasNext());
     }
 
     /**
@@ -78,7 +107,9 @@ public class MyListIteratorCustomTester {
      */
     @Test
     public void testHasPreviousStart() {
-
+        testListIter.left = testList.head;
+        testListIter.right = testList.head.getNext();
+        assertEquals(false, testListIter.hasPrevious());
     }
 
     /**
@@ -86,7 +117,9 @@ public class MyListIteratorCustomTester {
      */
     @Test
     public void testPreviousIndexStart() {
-
+        testListIter.left = testList.head;
+        testListIter.right = testList.head.getNext();
+        assertEquals(-1, )
     }
 
     /**
