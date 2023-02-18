@@ -31,8 +31,8 @@ public class MyListIteratorCustomTester {
      */
     @Test(expected = NoSuchElementException.class)
     public void testNextEnd() {
-        testListIter.left = testList.getNth(testList.size - 1);
-        testListIter.right = testList.getNth(testList.size);
+        testListIter.left = testList.head.getNext().getNext();
+        testListIter.right = testListIter.left.getNext().getNext();
         testListIter.idx = 3;
         testListIter.next();
     }
@@ -97,8 +97,8 @@ public class MyListIteratorCustomTester {
      */
     @Test
     public void testHasNextEnd() {
-        testListIter.left = testList.getNth(testList.size - 1);
-        testListIter.right = testList.getNth(testList.size);
+        testListIter.left = testList.head.getNext().getNext();
+        testListIter.right = testListIter.left.getNext().getNext();
         testListIter.idx = 3;
         assertEquals(false, testListIter.hasNext());
     }
@@ -128,8 +128,8 @@ public class MyListIteratorCustomTester {
      */
     @Test
     public void testNextIndexEnd() {
-        testListIter.left = testList.getNth(testList.size - 1);
-        testListIter.right = testList.getNth(testList.size);
+        testListIter.left = testList.head.getNext().getNext();
+        testListIter.right = testListIter.left.getNext().getNext();
         testListIter.idx = 3;
         assertEquals(testList.size, testListIter.nextIndex());
     }
