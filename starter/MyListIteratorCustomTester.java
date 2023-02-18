@@ -52,7 +52,7 @@ public class MyListIteratorCustomTester {
     /**
      * Aims to test the add(E e) method when an invalid element is added
      */
-    @Test(expected = NoSuchElementException.class)
+    @Test(expected = NullPointerException.class)
     public void testAddInvalid() {
         testListIter.left = testList.head;
         testListIter.right = testList.head.getNext();
@@ -85,7 +85,7 @@ public class MyListIteratorCustomTester {
     /**
      * Aims to test the remove() method when canRemoveOrSet is false
      */
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testCantRemove() {
         testListIter.left = testList.head;
         testListIter.right = testList.head.getNext();
@@ -99,6 +99,7 @@ public class MyListIteratorCustomTester {
     public void testHasNextEnd() {
         testListIter.left = testList.getNth(testList.size - 1);
         testListIter.right = testList.getNth(testList.size);
+        testListIter.idx = 3;
         assertEquals(false, testListIter.hasNext());
     }
 
@@ -119,7 +120,7 @@ public class MyListIteratorCustomTester {
     public void testPreviousIndexStart() {
         testListIter.left = testList.head;
         testListIter.right = testList.head.getNext();
-        assertEquals(-1, )
+        assertEquals(-1, testListIter.previousIndex());
     }
 
     /**
@@ -127,6 +128,9 @@ public class MyListIteratorCustomTester {
      */
     @Test
     public void testNextIndexEnd() {
-
+        testListIter.left = testList.getNth(testList.size - 1);
+        testListIter.right = testList.getNth(testList.size);
+        testListIter.idx = 3;
+        assertEquals(testList.size, testListIter.nextIndex());
     }
 }
